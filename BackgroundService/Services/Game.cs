@@ -46,6 +46,7 @@ namespace BackgroundService.Services
             UserData userData = _data[userId];
             // TODO: Ajouter la valeur du muliplier au lieu d'ajouter 1
             userData.Score += 1;
+
         }
 
         // TODO: Ajouter une méthode pour acheter un multiplier. Le coût est le prix de base * le multiplier actuel
@@ -97,7 +98,12 @@ namespace BackgroundService.Services
                     scope.ServiceProvider.GetRequiredService<BackgroundServiceContext>();
 
                 // TODO: Mettre à jour et sauvegarder le nbWinds des joueurs
-
+                List<Player> players = await backgroundServiceContext.Player.Where(u => winners.Contains(u.UserId)).ToListAsync();
+                foreach (var player in players)
+                {
+                    player.nbWins++;
+                }
+                await backgroundServiceContext.SaveChangesAsync();
                 List<IdentityUser> users = await backgroundServiceContext.Users.Where(u => winners.Contains(u.Id)).ToListAsync();
 
                 RoundResult roundResult = new RoundResult()

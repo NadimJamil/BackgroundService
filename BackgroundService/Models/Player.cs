@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.Runtime.InteropServices.Marshalling;
 
 namespace BackgroundService.Models
 {
@@ -8,5 +9,6 @@ namespace BackgroundService.Models
         public string UserId { get; set; }
         public IdentityUser User { get; set; }
         // TODO: Ajouter une propriété NbWins
+        public int nbWins { get; set; }
     }
 }
