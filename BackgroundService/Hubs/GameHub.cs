@@ -3,6 +3,7 @@ using BackgroundService.DTOs;
 using BackgroundService.Models;
 using BackgroundService.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 
 namespace BackgroundService.Hubs
@@ -25,10 +26,11 @@ namespace BackgroundService.Hubs
             _game.AddUser(Context.UserIdentifier!);
 
             Player player = _backgroundServiceContext.Player.Where(p => p.UserId == Context.UserIdentifier!).Single();
-
             await Clients.Caller.SendAsync("GameInfo", new GameInfoDTO()
             {
                 // TODO: Remplir l'information avec les 2 nouveaux features (nbWins et multiplierCost)
+                NbWins = player.NbWins,
+                Multiplicator = Game.MULTIPLIER_BASE_PRICE
             });
         }
 
@@ -44,5 +46,14 @@ namespace BackgroundService.Hubs
         }
 
         // Ajouter une méthode pour pouvoir acheter un multiplier
+        public void AcheterMulti()
+        {
+            Player player = _backgroundServiceContext.Player.Where(p => p.UserId == Context.UserIdentifier!).Single();
+
+            if(player.UserId != null)
+            {
+                _game.AcheterMulti(player.UserId);
+            }
+        }
     }
 }
